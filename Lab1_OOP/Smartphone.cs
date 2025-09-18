@@ -4,4 +4,3 @@
     Average,
     Powerful
 }
-

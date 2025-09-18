@@ -7,9 +7,11 @@ public class Smart
     private int ozyGB;
     private int cameraMPx;
 
+    public int BatteryLevel { get; set; } = 100;
+
     public string Brand
     {
-        get { return brand; }
+        get => brand;
         set
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length < 3 || value.Length > 12)
@@ -20,7 +22,7 @@ public class Smart
 
     public string Model
     {
-        get { return model; }
+        get => model;
         set
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length < 2 || value.Length > 12)
@@ -31,18 +33,19 @@ public class Smart
 
     public int OzyGB
     {
-        get { return ozyGB; }
+        get => ozyGB;
         set
         {
             if (value < 0 || value > 512)
                 throw new ArgumentException("ОЗУ повинно бути від 0 до 512 ГБ!");
             ozyGB = value;
+            UpdateType();
         }
     }
 
     public int CameraMPx
     {
-        get { return cameraMPx; }
+        get => cameraMPx;
         set
         {
             if (value <= 0 || value > 264)
@@ -51,7 +54,7 @@ public class Smart
         }
     }
 
-    public SmartphoneType Type { get; set; }
+    public SmartphoneType Type { get; private set; }
 
     public Smart(string brand, string model, int ozyGB, int cameraMPx, SmartphoneType type)
     {
@@ -62,39 +65,43 @@ public class Smart
         Type = type;
     }
 
-    public void ShowInfo()
+    public string GetInfo()
     {
-        Console.WriteLine($"Бренд: {Brand}");
-        Console.WriteLine($"Модель: {Model}");
-        Console.WriteLine($"ОЗУ: {OzyGB} ГБ");
-        Console.WriteLine($"Камера: {CameraMPx} Мп");
-        Console.WriteLine($"Потужність: {Type}");
-        Console.WriteLine(new string('-', 25));
+        return $"Бренд: {Brand}\nМодель: {Model}\nОЗУ: {OzyGB} ГБ\nКамера: {CameraMPx} Мп\nПотужність: {Type}\nБатарея: {BatteryLevel}%\n{new string('-', 25)}";
     }
 
-    public void Call() => Console.WriteLine($"{Brand} {Model} може дзвонити");
-    public void Photo() => Console.WriteLine($"{Brand} {Model} може фотографувати");
-    public void Internet() => Console.WriteLine($"{Brand} {Model} може виходити в інтернет");
-    public void Temperature() => Console.WriteLine($"{Brand} {Model} може нагріватися");
+    public string Call() => $"{Brand} {Model} може дзвонити";
+    public string Photo() => $"{Brand} {Model} може фотографувати";
+    public string Internet() => $"{Brand} {Model} може виходити в інтернет";
+    public string Temperature() => $"{Brand} {Model} може нагріватися";
 
-    public void UpgradeRAM(int extraGB)
+    public string UpgradeRAM(int extraGB)
     {
         if (extraGB > 0 && OzyGB + extraGB <= 512)
         {
             OzyGB += extraGB;
-            Console.WriteLine($"ОЗУ збільшено! Тепер {OzyGB} ГБ");
+            return $"ОЗУ збільшено! Тепер {OzyGB} ГБ";
         }
-        else
-            Console.WriteLine("Неможливо збільшити ОЗУ!");
+        return "Неможливо збільшити ОЗУ!";
     }
 
-    public void CompareCamera(Smart other)
+    public string CompareCamera(Smart other)
     {
         if (this.CameraMPx > other.CameraMPx)
-            Console.WriteLine($"{this.Brand} {this.Model} має кращу камеру ({this.CameraMPx} Мп) ніж {other.Brand} {other.Model} ({other.CameraMPx} Мп).");
+            return $"{this.Brand} {this.Model} має кращу камеру ({this.CameraMPx} Мп) ніж {other.Brand} {other.Model} ({other.CameraMPx} Мп).";
         else if (this.CameraMPx < other.CameraMPx)
-            Console.WriteLine($"{other.Brand} {other.Model} має кращу камеру ({other.CameraMPx} Мп) ніж {this.Brand} {this.Model} ({this.CameraMPx} Мп).");
+            return $"{other.Brand} {other.Model} має кращу камеру ({other.CameraMPx} Мп) ніж {this.Brand} {this.Model} ({this.CameraMPx} Мп).";
         else
-            Console.WriteLine("У обох смартфонів однакова камера.");
+            return "У обох смартфонів однакова камера.";
+    }
+
+    private void UpdateType()
+    {
+        if (OzyGB <= 4)
+            Type = SmartphoneType.Weak;
+        else if (OzyGB <= 8)
+            Type = SmartphoneType.Average;
+        else
+            Type = SmartphoneType.Powerful;
     }
 }

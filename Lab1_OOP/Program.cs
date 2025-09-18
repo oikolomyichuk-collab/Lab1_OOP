@@ -5,6 +5,7 @@ class Program
 {
     static void Main()
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
         List<Smart> smartphones = new List<Smart>();
         int choice = -1;
         int maxCount = 0;
@@ -92,9 +93,9 @@ class Program
                     else
                     {
                         Console.WriteLine("\nСписок смартфонів:");
-                        Console.WriteLine("--------------------------------------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------------------------------");
                         Console.WriteLine($"{"#",3} {"Бренд",-12} {"Модель",-15} {"ОЗУ",5} {"Камера",8} {"Тип",-10}");
-                        Console.WriteLine("--------------------------------------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------------------------------");
 
                         for (int i = 0; i < smartphones.Count; i++)
                         {
@@ -103,7 +104,6 @@ class Program
                         }
                     }
                     break;
-
 
                 case 3:
                     Console.Write("Введіть бренд для пошуку: ");
@@ -114,7 +114,7 @@ class Program
                     {
                         if (s.Brand.Equals(searchBrand, StringComparison.OrdinalIgnoreCase))
                         {
-                            s.ShowInfo();
+                            Console.WriteLine(s.GetInfo());
                             found = true;
                         }
                     }
@@ -137,10 +137,10 @@ class Program
                         if (int.TryParse(Console.ReadLine(), out int demoIndex) &&
                             demoIndex >= 0 && demoIndex < smartphones.Count)
                         {
-                            smartphones[demoIndex].Call();
-                            smartphones[demoIndex].Photo();
-                            smartphones[demoIndex].Internet();
-                            smartphones[demoIndex].Temperature();
+                            Console.WriteLine(smartphones[demoIndex].Call());
+                            Console.WriteLine(smartphones[demoIndex].Photo());
+                            Console.WriteLine(smartphones[demoIndex].Internet());
+                            Console.WriteLine(smartphones[demoIndex].Temperature());
                         }
                         else
                         {
@@ -151,8 +151,7 @@ class Program
 
                 case 5:
                     Console.Write("Введіть індекс смартфона для видалення: ");
-                    if (int.TryParse(Console.ReadLine(), out int index) &&
-                        index >= 0 && index < smartphones.Count)
+                    if (int.TryParse(Console.ReadLine(), out int index) && index >= 0 && index < smartphones.Count)
                     {
                         smartphones.RemoveAt(index);
                         Console.WriteLine("Смартфон видалено!");
@@ -172,8 +171,7 @@ class Program
                         for (int i = 0; i < smartphones.Count; i++)
                             Console.WriteLine($"{i} - {smartphones[i].Brand} {smartphones[i].Model}");
 
-                        if (int.TryParse(Console.ReadLine(), out int first) &&
-                            first >= 0 && first < smartphones.Count)
+                        if (int.TryParse(Console.ReadLine(), out int first) && first >= 0 && first < smartphones.Count)
                         {
                             Console.WriteLine("Оберіть індекс другого смартфона:");
                             for (int i = 0; i < smartphones.Count; i++)
@@ -183,7 +181,7 @@ class Program
                             if (int.TryParse(Console.ReadLine(), out int second) &&
                                 second >= 0 && second < smartphones.Count && second != first)
                             {
-                                smartphones[first].CompareCamera(smartphones[second]);
+                                Console.WriteLine(smartphones[first].CompareCamera(smartphones[second]));
                             }
                             else
                             {
@@ -214,7 +212,7 @@ class Program
                             Console.Write("На скільки ГБ збільшити: ");
                             if (int.TryParse(Console.ReadLine(), out int extraGB))
                             {
-                                smartphones[ramIndex].UpgradeRAM(extraGB);
+                                Console.WriteLine(smartphones[ramIndex].UpgradeRAM(extraGB));
                             }
                             else
                             {
@@ -236,7 +234,6 @@ class Program
                     Console.WriteLine("Невірний вибір, спробуйте ще раз.");
                     break;
             }
-
         } while (choice != 0);
     }
 }
