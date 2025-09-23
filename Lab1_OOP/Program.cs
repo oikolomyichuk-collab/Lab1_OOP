@@ -78,7 +78,38 @@ class Program
                         else
                             type = SmartphoneType.Powerful;
 
-                        smartphones.Add(new Smart(brand, model, ozy, camera, type));
+                        Console.WriteLine("Оберіть конструктор:");
+                        Console.WriteLine("1 - Конструктор з 3 параметрами (brand, model, ozyGB)");
+                        Console.WriteLine("2 - Повний конструктор (brand, model, ozyGB, cameraMPx, type)");
+                        Console.WriteLine("3 - Конструктор без параметрів");
+
+                        if (!int.TryParse(Console.ReadLine(), out int ctorChoice))
+                        {
+                            Console.WriteLine("Помилка! Вибрано некоректний конструктор.");
+                            break;
+                        }
+
+                        Smart smart;
+                        switch (ctorChoice)
+                        {
+                            case 1:
+                                smart = new Smart(brand, model, ozy);
+                                Console.WriteLine("Спрацював конструктор з 3 параметрами (brand, model, ozyGB)!");
+                                break;
+                            case 2:
+                                smart = new Smart(brand, model, ozy, camera, type);
+                                Console.WriteLine("Спрацював повний конструктор (brand, model, ozyGB, cameraMPx, type)!");
+                                break;
+                            case 3:
+                                smart = new Smart();
+                                Console.WriteLine("Спрацював конструктор без параметрів!");
+                                break;
+                            default:
+                                Console.WriteLine("Невірний вибір конструктора!");
+                                continue;
+                        }
+
+                        smartphones.Add(smart);
                         Console.WriteLine("Смартфон додано!\n");
                     }
                     catch (Exception ex)
@@ -93,14 +124,14 @@ class Program
                     else
                     {
                         Console.WriteLine("\nСписок смартфонів:");
-                        Console.WriteLine("--------------------------------------------------------------------------");
-                        Console.WriteLine($"{"#",3} {"Бренд",-12} {"Модель",-15} {"ОЗУ",5} {"Камера",8} {"Тип",-10}");
-                        Console.WriteLine("--------------------------------------------------------------------------");
+                        Console.WriteLine("-------------------------------------------------------------------------------------------------");
+                        Console.WriteLine($"{"#",3} {"Бренд",-12} {"Модель",-15} {"ОЗУ",5} {"Камера",8} {"Тип",-10} {"Батарея",8}");
+                        Console.WriteLine("-------------------------------------------------------------------------------------------------");
 
                         for (int i = 0; i < smartphones.Count; i++)
                         {
                             Smart s = smartphones[i];
-                            Console.WriteLine($"{i,3} {s.Brand,-12} {s.Model,-15} {s.OzyGB,5} {s.CameraMPx,8} {s.Type,-10}");
+                            Console.WriteLine($"{i,3} {s.Brand,-12} {s.Model,-15} {s.OzyGB,5} {s.CameraMPx,8} {s.Type,-10} {s.BatteryLevel,8}%");
                         }
                     }
                     break;
@@ -138,6 +169,8 @@ class Program
                             demoIndex >= 0 && demoIndex < smartphones.Count)
                         {
                             Console.WriteLine(smartphones[demoIndex].Call());
+                            Console.WriteLine(smartphones[demoIndex].Call("123-456-789"));
+
                             Console.WriteLine(smartphones[demoIndex].Photo());
                             Console.WriteLine(smartphones[demoIndex].Internet());
                             Console.WriteLine(smartphones[demoIndex].Temperature());

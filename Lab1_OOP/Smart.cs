@@ -36,8 +36,8 @@ public class Smart
         get => ozyGB;
         set
         {
-            if (value < 0 || value > 512)
-                throw new ArgumentException("ОЗУ повинно бути від 0 до 512 ГБ!");
+            if (value < 1 || value > 512)
+                throw new ArgumentException("ОЗУ повинно бути від 1 до 512 ГБ!");
             ozyGB = value;
             UpdateType();
         }
@@ -48,13 +48,27 @@ public class Smart
         get => cameraMPx;
         set
         {
-            if (value <= 0 || value > 264)
+            if (value < 1 || value > 264)
                 throw new ArgumentException("Камера повинна бути від 1 до 264 Мп!");
             cameraMPx = value;
         }
     }
 
     public SmartphoneType Type { get; private set; }
+
+    public Smart()
+    {
+        Brand = "Невідомо";
+        Model = "Невідомо";
+        OzyGB = 1;
+        CameraMPx = 1;
+        Type = SmartphoneType.Weak;
+    }
+
+    public Smart(string brand, string model, int ozyGB)
+        : this(brand, model, ozyGB, 1, GetTypeByRam(ozyGB))
+    {
+    }
 
     public Smart(string brand, string model, int ozyGB, int cameraMPx, SmartphoneType type)
     {
@@ -71,6 +85,9 @@ public class Smart
     }
 
     public string Call() => $"{Brand} {Model} може дзвонити";
+
+    public string Call(string number) => $"{Brand} {Model} телефонує на номер {number}";
+
     public string Photo() => $"{Brand} {Model} може фотографувати";
     public string Internet() => $"{Brand} {Model} може виходити в інтернет";
     public string Temperature() => $"{Brand} {Model} може нагріватися";
@@ -99,9 +116,16 @@ public class Smart
     {
         if (OzyGB <= 4)
             Type = SmartphoneType.Weak;
-        else if (OzyGB <= 8)
+        else if (OzyGB <= 12)
             Type = SmartphoneType.Average;
         else
             Type = SmartphoneType.Powerful;
+    }
+
+    private static SmartphoneType GetTypeByRam(int ozyGB)
+    {
+        if (ozyGB <= 4) return SmartphoneType.Weak;
+        if (ozyGB <= 12) return SmartphoneType.Average;
+        return SmartphoneType.Powerful;
     }
 }
