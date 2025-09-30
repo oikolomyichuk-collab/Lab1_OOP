@@ -9,6 +9,12 @@ public class Smart
 
     public int BatteryLevel { get; set; } = 100;
 
+    private static int count = 0;
+    private static string category = "Електроніка";
+
+    public static int Count => count;
+    public static string Category => category;
+
     public string Brand
     {
         get => brand;
@@ -63,20 +69,22 @@ public class Smart
         OzyGB = 1;
         CameraMPx = 1;
         Type = SmartphoneType.Weak;
+        count++;
     }
 
     public Smart(string brand, string model, int ozyGB)
-        : this(brand, model, ozyGB, 1, GetTypeByRam(ozyGB))
+        : this(brand, model, ozyGB, 1)
     {
     }
 
-    public Smart(string brand, string model, int ozyGB, int cameraMPx, SmartphoneType type)
+    public Smart(string brand, string model, int ozyGB, int cameraMPx)
     {
         Brand = brand;
         Model = model;
         OzyGB = ozyGB;
         CameraMPx = cameraMPx;
-        Type = type;
+        UpdateType();
+        count++;
     }
 
     public string GetInfo()
@@ -122,10 +130,44 @@ public class Smart
             Type = SmartphoneType.Powerful;
     }
 
-    private static SmartphoneType GetTypeByRam(int ozyGB)
+    public override string ToString()
     {
-        if (ozyGB <= 4) return SmartphoneType.Weak;
-        if (ozyGB <= 12) return SmartphoneType.Average;
-        return SmartphoneType.Powerful;
+        return $"{Brand};{Model};{OzyGB};{CameraMPx}";
+    }
+
+    public static Smart Parse(string s)
+    {
+        string[] parts = s.Split(';');
+        if (parts.Length != 4)
+            throw new FormatException("Рядок має містити 4 частини: brand;model;ozyGB;cameraMPx");
+
+        string b = parts[0];
+        string m = parts[1];
+        if (!int.TryParse(parts[2], out int ozy))
+            throw new FormatException("ОЗУ має бути числом!");
+        if (!int.TryParse(parts[3], out int cam))
+            throw new FormatException("Камера має бути числом!");
+
+        return new Smart(b, m, ozy, cam);
+    }
+
+    public static bool TryParse(string s, out Smart obj)
+    {
+        try
+        {
+            obj = Parse(s);
+            return true;
+        }
+        catch
+        {
+            obj = null;
+            return false;
+        }
+    }
+
+    public static string GetCategory() 
+    {
+        return $"Категорія товару: {category}";
     }
 }
+

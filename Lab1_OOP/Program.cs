@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 class Program
 {
     static void Main()
     {
+
+        Console.WriteLine(CultureInfo.CurrentCulture.TextInfo.ListSeparator);
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         List<Smart> smartphones = new List<Smart>();
         int choice = -1;
@@ -20,12 +23,13 @@ class Program
             Console.WriteLine("5 - Видалити об'єкт за індексом");
             Console.WriteLine("6 - Порівняти камери двох смартфонів");
             Console.WriteLine("7 - Збільшити ОЗУ смартфону");
+            Console.WriteLine("8 - Продемонструвати static-методи");
             Console.WriteLine("0 - Вийти з програми");
             Console.Write("Введіть вибір: ");
 
             if (!int.TryParse(Console.ReadLine(), out choice))
             {
-                Console.WriteLine("Помилка! Введіть число від 0 до 7.");
+                Console.WriteLine("Помилка! Введіть число від 0 до 8.");
                 choice = -1;
                 continue;
             }
@@ -48,73 +52,17 @@ class Program
                         break;
                     }
 
-                    try
+                    Console.WriteLine("Введіть характеристики у форматі: brand model ozyGB cameraMPx");
+                    string input = Console.ReadLine();
+
+                    if (Smart.TryParse(input, out Smart parsedSmart))
                     {
-                        Console.Write("Введіть бренд смартфону: ");
-                        string brand = Console.ReadLine();
-
-                        Console.Write("Введіть модель смартфону: ");
-                        string model = Console.ReadLine();
-
-                        Console.Write("Введіть оперативну пам'ять смартфону (ГБ): ");
-                        if (!int.TryParse(Console.ReadLine(), out int ozy))
-                        {
-                            Console.WriteLine("Помилка! Введіть число.");
-                            break;
-                        }
-
-                        Console.Write("Введіть кількість мегапікселів камери смартфону: ");
-                        if (!int.TryParse(Console.ReadLine(), out int camera))
-                        {
-                            Console.WriteLine("Помилка! Введіть число.");
-                            break;
-                        }
-
-                        SmartphoneType type;
-                        if (ozy <= 4)
-                            type = SmartphoneType.Weak;
-                        else if (ozy <= 8)
-                            type = SmartphoneType.Average;
-                        else
-                            type = SmartphoneType.Powerful;
-
-                        Console.WriteLine("Оберіть конструктор:");
-                        Console.WriteLine("1 - Конструктор з 3 параметрами (brand, model, ozyGB)");
-                        Console.WriteLine("2 - Повний конструктор (brand, model, ozyGB, cameraMPx, type)");
-                        Console.WriteLine("3 - Конструктор без параметрів");
-
-                        if (!int.TryParse(Console.ReadLine(), out int ctorChoice))
-                        {
-                            Console.WriteLine("Помилка! Вибрано некоректний конструктор.");
-                            break;
-                        }
-
-                        Smart smart;
-                        switch (ctorChoice)
-                        {
-                            case 1:
-                                smart = new Smart(brand, model, ozy);
-                                Console.WriteLine("Спрацював конструктор з 3 параметрами (brand, model, ozyGB)!");
-                                break;
-                            case 2:
-                                smart = new Smart(brand, model, ozy, camera, type);
-                                Console.WriteLine("Спрацював повний конструктор (brand, model, ozyGB, cameraMPx, type)!");
-                                break;
-                            case 3:
-                                smart = new Smart();
-                                Console.WriteLine("Спрацював конструктор без параметрів!");
-                                break;
-                            default:
-                                Console.WriteLine("Невірний вибір конструктора!");
-                                continue;
-                        }
-
-                        smartphones.Add(smart);
-                        Console.WriteLine("Смартфон додано!\n");
+                        smartphones.Add(parsedSmart);
+                        Console.WriteLine("Смартфон додано!");
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Console.WriteLine($"Помилка: {ex.Message}");
+                        Console.WriteLine("Помилка! Некоректні дані.");
                     }
                     break;
 
@@ -123,6 +71,7 @@ class Program
                         Console.WriteLine("Список порожній!");
                     else
                     {
+                        Console.WriteLine($"\nВсього смартфонів (створено): {Smart.Count}");
                         Console.WriteLine("\nСписок смартфонів:");
                         Console.WriteLine("-------------------------------------------------------------------------------------------------");
                         Console.WriteLine($"{"#",3} {"Бренд",-12} {"Модель",-15} {"ОЗУ",5} {"Камера",8} {"Тип",-10} {"Батарея",8}");
@@ -257,6 +206,11 @@ class Program
                             Console.WriteLine("Невірний індекс!");
                         }
                     }
+                    break;
+
+                case 8:
+                    Console.WriteLine(Smart.GetCategory());
+                    Console.WriteLine($"Кількість створених смартфонів: {Smart.Count}");
                     break;
 
                 case 0:
