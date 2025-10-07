@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 
+namespace Lab1_OOP 
+{ 
 class Program
 {
     static void Main()
@@ -52,7 +54,7 @@ class Program
                         break;
                     }
 
-                    Console.WriteLine("Введіть характеристики у форматі: brand model ozyGB cameraMPx");
+                    Console.WriteLine("Введіть характеристики у форматі: brand;model;ozyGB;cameraMPx");
                     string input = Console.ReadLine();
 
                     if (Smart.TryParse(input, out Smart parsedSmart))
@@ -223,4 +225,5 @@ class Program
             }
         } while (choice != 0);
     }
+}
 }

@@ -1,6 +1,9 @@
-﻿public enum SmartphoneType
+﻿namespace Lab1_OOP
 {
-    Weak,
-    Average,
-    Powerful
+    public enum SmartphoneType
+    {
+        Weak,
+        Average,
+        Powerfull
+    }
 }
