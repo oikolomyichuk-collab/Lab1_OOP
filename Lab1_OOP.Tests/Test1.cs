@@ -1,4 +1,5 @@
 ﻿using Lab1_OOP;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lab1_OOP.Tests
@@ -353,7 +354,7 @@ namespace Lab1_OOP.Tests
     [TestClass]
     public class UpdateType1Tests
     {
-        private Smart smart; 
+        private Smart smart;
 
         [TestInitialize]
         public void Init()
@@ -409,13 +410,13 @@ namespace Lab1_OOP.Tests
 
 
     [TestClass]
-    [DoNotParallelize] 
+    [DoNotParallelize]
     public class CountTests
     {
         [TestInitialize]
         public void Init()
         {
-            Smart.ResetCountForTests(); 
+            Smart.ResetCountForTests();
         }
 
         [TestMethod]
@@ -430,6 +431,92 @@ namespace Lab1_OOP.Tests
         }
     }
 
+    [TestClass]
+    public class ProgramListMethodsTests
+    {
+        private List<Smart> smartphones;
+
+        [TestInitialize]
+        public void Init()
+        {
+            smartphones = new List<Smart>
+            {
+                new Smart("Samsung", "Galaxy", 8, 64),
+                new Smart("Xiaomi", "Redmi", 4, 48),
+                new Smart("Apple", "iPhone", 6, 12)
+            };
+        }
+
+        [TestMethod]
+        public void AddSmartphone_ValidInput_AddsObject()
+        {
+            // Arrange
+            string input = "Nokia;3310;1;2";
+
+            // Act
+            Program.AddSmartphone(smartphones, input);
+
+            // Assert
+            Assert.AreEqual(4, smartphones.Count);
+            Assert.AreEqual("Nokia", smartphones[3].Brand);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(System.ArgumentException))]
+        public void AddSmartphone_InvalidInput_ThrowsException()
+        {
+            // Arrange
+            string input = "НекорректнаСтрока";
+
+            // Act
+            Program.AddSmartphone(smartphones, input);
+        }
+
+        [TestMethod]
+        public void FindByBrand_ExistingBrand_ReturnsList()
+        {
+            // Act
+            var result = Program.FindByBrand(smartphones, "Samsung");
+
+            // Assert
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("Galaxy", result[0].Model);
+        }
+
+        [TestMethod]
+        public void FindByBrand_NonExistingBrand_ReturnsEmptyList()
+        {
+            // Act
+            var result = Program.FindByBrand(smartphones, "Motorola");
+
+            // Assert
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public void RemoveSmartphone_ValidIndex_RemovesObject()
+        {
+            // Act
+            bool removed = Program.RemoveSmartphone(smartphones, 1);
+
+            // Assert
+            Assert.IsTrue(removed);
+            Assert.AreEqual(2, smartphones.Count);
+            Assert.AreEqual("Samsung", smartphones[0].Brand);
+        }
+
+        [TestMethod]
+        public void RemoveSmartphone_InvalidIndex_ReturnsFalse()
+        {
+            // Act
+            bool removed = Program.RemoveSmartphone(smartphones, 10);
+
+            // Assert
+            Assert.IsFalse(removed);
+            Assert.AreEqual(3, smartphones.Count);
+        }
+
+    }
 }
 
 
