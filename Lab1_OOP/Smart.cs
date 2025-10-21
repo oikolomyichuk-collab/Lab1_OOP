@@ -1,18 +1,29 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 namespace Lab1_OOP
 {
     public class Smart
     {
+        [JsonInclude]
+        [JsonPropertyName("brand_name")]
         private string brand;
+        [JsonInclude]
+        [JsonPropertyName("model_name")]
         private string model;
+        [JsonInclude]
+        [JsonPropertyName("ram_gb")]
         private int ozyGB;
+        [JsonInclude]
+        [JsonPropertyName("camera_mpx")]
         private int cameraMPx;
 
+        [JsonIgnore]
         public int BatteryLevel { get; set; } = 100;
         private static string category = "Електроніка";
         private static int count = 0;
+        [JsonIgnore]
         public static int Count => count;
 
         public static void ResetCountForTests()
@@ -20,6 +31,7 @@ namespace Lab1_OOP
             Interlocked.Exchange(ref count, 0);
         }
 
+        [JsonIgnore]
         public static string Category => category;
 
         public string Brand
@@ -67,6 +79,7 @@ namespace Lab1_OOP
             }
         }
 
+        [JsonIgnore]
         public SmartphoneType Type { get; private set; }
 
         public Smart()

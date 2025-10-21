@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace Lab1_OOP
 {
@@ -8,7 +9,6 @@ namespace Lab1_OOP
     {
         static void Main()
         {
-            Console.WriteLine(CultureInfo.CurrentCulture.TextInfo.ListSeparator);
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             List<Smart> smartphones = new List<Smart>();
             int choice = -1;
@@ -25,13 +25,15 @@ namespace Lab1_OOP
                 Console.WriteLine("6 - Порівняти камери двох смартфонів");
                 Console.WriteLine("7 - Збільшити ОЗУ смартфону");
                 Console.WriteLine("8 - Продемонструвати static-методи");
+                Console.WriteLine("9 - Зберегти колекцію у файл");
+                Console.WriteLine("10 - Зчитати колекцію з файлу");
+                Console.WriteLine("11 - Очистити колекцію");
                 Console.WriteLine("0 - Вийти з програми");
                 Console.Write("Введіть вибір: ");
 
                 if (!int.TryParse(Console.ReadLine(), out choice))
                 {
-                    Console.WriteLine("Помилка! Введіть число від 0 до 8.");
-                    choice = -1;
+                    Console.WriteLine("Помилка! Введіть число від 0 до 11.");
                     continue;
                 }
 
@@ -73,7 +75,6 @@ namespace Lab1_OOP
                         else
                         {
                             Console.WriteLine($"\nВсього смартфонів (створено): {Smart.Count}");
-                            Console.WriteLine("\nСписок смартфонів:");
                             Console.WriteLine("-------------------------------------------------------------------------------------------------");
                             Console.WriteLine($"{"#",3} {"Бренд",-12} {"Модель",-15} {"ОЗУ",5} {"Камера",8} {"Тип",-10} {"Батарея",8}");
                             Console.WriteLine("-------------------------------------------------------------------------------------------------");
@@ -203,6 +204,18 @@ namespace Lab1_OOP
                     case 8:
                         Console.WriteLine(Smart.GetCategory());
                         Console.WriteLine($"Кількість створених смартфонів: {Smart.Count}");
+                        break;
+
+                    case 9:
+                        SmartFileManager.SaveCollection(smartphones);
+                        break;
+
+                    case 10:
+                        SmartFileManager.LoadCollection(smartphones);
+                        break;
+
+                    case 11:
+                        SmartFileManager.ClearCollection(smartphones);
                         break;
 
                     case 0:
